@@ -1,0 +1,46 @@
+3
+Prepare seminar cs427
+Code leap motion demo, prepare slide
+12
+00
+22
+8
+2020
+0
+2
+gold
+50
+intelligence
+1
+Prepare seminar machine learning
+Read GNN papers, watch hands-on GNN videos, create slide
+21
+00
+23
+8
+2020
+0
+3
+gold
+50
+intelligence
+3
+strength
+1
+Practice guitar
+Learn new scale, 15 mins scale playing.
+24
+00
+23
+8
+2020
+0
+4
+gold
+100
+agility
+1
+intelligence
+3
+strength
+1
