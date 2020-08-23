@@ -1,11 +1,7 @@
 3
 Prepare seminar cs427
 Code leap motion demo, prepare slide
-12
-00
-22
-8
-2020
+202008221200
 0
 2
 gold
@@ -14,11 +10,7 @@ intelligence
 1
 Prepare seminar machine learning
 Read GNN papers, watch hands-on GNN videos, create slide
-21
-00
-23
-8
-2020
+202008232100
 0
 3
 gold
@@ -29,11 +21,7 @@ strength
 1
 Practice guitar
 Learn new scale, 15 mins scale playing.
-24
-00
-23
-8
-2020
+202008232300
 0
 4
 gold
