@@ -6,7 +6,7 @@ public class StatusPanelController : MonoBehaviour
 {
     public GameObject playerObj;
     Player player;
-    
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,16 +23,17 @@ public class StatusPanelController : MonoBehaviour
     {
         if (this.gameObject.activeSelf == true)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (player.stat_change == true)
             {
-                this.gameObject.SetActive(false);
+                SetTexts();
+                player.stat_change = false;
             }
         }
     }
     public void SetTexts()
     {
         GameObject panel1 = this.gameObject.transform.GetChild(1).gameObject;
-        panel1.transform.GetChild(0).gameObject.GetComponent<Text>().text = player.name;
+        panel1.transform.GetChild(0).gameObject.GetComponent<Text>().text = player.playerName;
         panel1.transform.GetChild(3).gameObject.GetComponent<Text>().text = player.str.ToString();
         panel1.transform.GetChild(5).gameObject.GetComponent<Text>().text = player.agi.ToString();
         panel1.transform.GetChild(7).gameObject.GetComponent<Text>().text = player.intel.ToString();

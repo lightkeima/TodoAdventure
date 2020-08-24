@@ -7,6 +7,7 @@ public class TodoItem
 {
     public string title = "";
     public string description = "";
+    public bool noduetime = true;
     public DateTime duetime;
 
     //Daily Item
@@ -19,10 +20,6 @@ public class TodoItem
     {
         this.title = title;
         this.description = description;
-        this.duetime = duetime;
-        this.isDaily = true;
-        this.numberOfDone = numberOfDone;
-        this.bonus = bonus;
     }
 
     public TodoItem(string title, string description, DateTime duetime)
@@ -30,8 +27,7 @@ public class TodoItem
         this.title = title;
         this.description = description;
         this.duetime = duetime;
-        this.isDaily = false;
-        this.bonus = bonus;
+        this.noduetime = false;
     }
 
 
@@ -39,9 +35,7 @@ public class TodoItem
     {
         this.title = title;
         this.description = description;
-        this.duetime = duetime;
         this.isDaily = true;
-        this.numberOfDone = numberOfDone;
         this.bonus = bonus;
     }
 
@@ -52,6 +46,7 @@ public class TodoItem
         this.duetime = duetime;
         this.isDaily = false;
         this.bonus = bonus;
+        this.noduetime = false;
     }
 
     public string Summary()
@@ -62,7 +57,7 @@ public class TodoItem
 
         foreach (KeyValuePair<string, int> entry in bonus)
         {
-          summary += entry.Key + "\n" + entry.Value.ToString() + "\n";
+            summary += entry.Key + "\n" + entry.Value.ToString() + "\n";
         }
         Debug.Log(summary);
         return summary;

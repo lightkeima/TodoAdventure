@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public string name;
+    public string playerName = "Default";
+    public string playerId;
     public int str;
     public int agi;
     public int intel;
@@ -28,25 +29,19 @@ public class Player : MonoBehaviour
     public List<TodoItem> doneList;
     public List<TodoItem> todoList;
 
+    public bool stat_change = false;
     void Awake()
     {
-
+        SelectedPlayer selectedPlayer = GameObject.Find("PlayerData").GetComponent<SelectedPlayer>();
+        playerId = selectedPlayer.SelectedPlayerId;
+        playerName = selectedPlayer.PlayerName;
         this.doneList = new List<TodoItem>();
         this.todoList = new List<TodoItem>();
         LoadTodoList(true);
         LoadTodoList(false);
-        Debug.Log(todoList.Count);
+        CalculateAttributes();
+        CalculateStat();
     }
-
-    public Player(string name, int str, int agi, int intel, int gold = 0)
-    {
-        this.name = name;
-        this.str = str;
-        this.agi = agi;
-        this.intel = intel;
-        this.gold = gold;
-    }
-
     public void UpdateStat(int str, int agi, int intel)
     {
         this.str += str;
@@ -75,15 +70,21 @@ public class Player : MonoBehaviour
         this.magical_damage = 4 + 1 * this.intel;
         this.armor = 0 + (int)(this.agi * 0.2 + 0.2 * this.str);
         this.magic_resistance = (int)(0.4 * this.intel + 0.1 * this.agi);
+        stat_change = true;
     }
 
     public void LoadTodoList(bool load_done)
     {
 
         string path = Application.dataPath;
-        if (load_done) path += "/Todo/done.txt";
-        else path += "/Todo/todo.txt";
-        Debug.Log(path);
+        if (load_done) path += "/Todo/" + playerId + "_done.txt";
+        else path += "/Todo/" + playerId + "_todo.txt";
+        if (!File.Exists(path))
+        {
+            StreamWriter wr = new StreamWriter(path);
+            wr.WriteLine("0");
+            wr.Close();
+        }
         StreamReader sr = new StreamReader(path);
         int number_of_item = int.Parse(sr.ReadLine());
         while (number_of_item-- != 0)
@@ -105,7 +106,7 @@ public class Player : MonoBehaviour
                 if (isDaily == 0)
                 {
                     DateTime dt = new DateTime();
-                    dt = DateTime.ParseExact(duetime, "yyyyMMddhhmm", null);
+                    dt = DateTime.ParseExact(duetime, "yyyyMMddHHmm", null);
                     this.doneList.Add(new TodoItem(title, description, dt, bonus));
                 }
                 else
@@ -129,6 +130,9 @@ public class Player : MonoBehaviour
         }
         sr.Close();
     }
+    void SaveTodo(){
+        
+    }
     public void SummaryTodoList()
     {
         foreach (var item in todoList)
@@ -148,6 +152,7 @@ public class Player : MonoBehaviour
         if (todoList[index].bonus.ContainsKey("intelligence"))
             intel += todoList[index].bonus["intelligence"];
         todoList.RemoveAt(index);
+        CalculateStat();
     }
 
 }

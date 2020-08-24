@@ -10,7 +10,6 @@ public class TodolistController : MonoBehaviour
     public GameObject content;
     int currentNumberOfItem = 0;
     public GameObject itemPrefab;
-
     public RectTransform con;
     void Awake()
     {
@@ -19,7 +18,7 @@ public class TodolistController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        con.sizeDelta = new Vector2(0, (player.todoList.Count + 1) * 35);
+        con.sizeDelta = new Vector2(0, (player.todoList.Count) * 35);
         LoadTodoList();
     }
 
@@ -35,12 +34,14 @@ public class TodolistController : MonoBehaviour
     public void LoadTodoList()
     {
         currentNumberOfItem = player.todoList.Count;
+        con.sizeDelta = new Vector2(0, (player.todoList.Count) * 35);
         for (int i = 0; i < player.todoList.Count; ++i)
         {
-            Vector3 pos = new Vector3(0, -(i + 1)* 35, 0);
+            Vector3 pos = new Vector3(0, -(i + 1) * 35, 0);
             GameObject item = (GameObject)Instantiate(itemPrefab, pos, SpawnPoint.rotation);
             item.transform.SetParent(content.transform.GetChild(0), false);
             item.transform.GetChild(0).gameObject.GetComponent<Text>().text = player.todoList[i].title;
+            item.name = i.ToString();
             // item.transform.localPosition = new Vector3(0, , 0);
         }
     }
