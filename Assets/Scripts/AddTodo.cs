@@ -93,6 +93,7 @@ public class AddTodo : MonoBehaviour
         if (goldValue.text != "" && goldValue.text != "0") rewards.Add("gold", int.Parse(goldValue.text));
         tempTodo.bonus = rewards;
         player.todoList.Insert(0,tempTodo);
+        player.SaveTodo(false);
         player.SummaryTodoList();
         OnCancelBtnClick();
     }

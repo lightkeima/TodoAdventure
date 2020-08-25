@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 public class BattleSystem : MonoBehaviour
 {
 
+    public List<GameObject> playerAttackedAnim;
+    public List<GameObject> monsterAttackedAnim;
 
     public List<GameObject> backgrounds;
     //UI
@@ -50,6 +54,8 @@ public class BattleSystem : MonoBehaviour
     float darkness_damage = 0;
 
     // Enemy
+    public int monsterAttactAnimationIndex;
+    public int monsterBackgourndIndex;
     public int e_current_hp;
     public int e_current_mp;
     public int e_hp = 20;
@@ -96,6 +102,8 @@ public class BattleSystem : MonoBehaviour
         earth_damage = 0;
         darkness_damage = 0;
         // Enemy
+        monsterAttactAnimationIndex = monster.attackAnimIndex;
+        monsterBackgourndIndex = monster.bgid;
         e_current_hp = monster.hp;
         e_current_mp = monster.mp;
         e_hp = monster.hp;
@@ -118,7 +126,11 @@ public class BattleSystem : MonoBehaviour
         escapeBtn.onClick.AddListener(OnEscapeButtonClick);
         //descriptionText.text = monster.mosnterName + "approached!";
         UpdateHPMPPanel();
-
+        foreach (GameObject background in backgrounds)
+        {
+            background.SetActive(false);
+        }
+        backgrounds[monsterBackgourndIndex].SetActive(true);
     }
 
     // Update is called once per frame
@@ -163,10 +175,23 @@ public class BattleSystem : MonoBehaviour
     */
     void UpdateHPMPPanel()
     {
-        pHp.text = p_current_hp + "/" + hp;
-        pMp.text = p_current_mp + "/" + mp;
-        eHp.text = e_current_hp + "/" + e_hp;
-        eMp.text = e_current_mp + "/" + e_mp;
+        if (p_current_hp >= 0)
+            pHp.text = p_current_hp + "/" + hp;
+        else pHp.text = "0/" + hp;
+
+        if (p_current_mp >= 0)
+            pMp.text = p_current_mp + "/" + mp;
+        else pMp.text = "0/" + mp;
+
+        if (e_current_hp >= 0)
+            eHp.text = e_current_hp + "/" + e_hp;
+        else eHp.text = "0/" + e_hp;
+
+        if (e_current_mp >= 0)
+            eMp.text = e_current_mp + "/" + e_mp;
+        else
+            eMp.text = "0/" + e_mp;
+
     }
     public int DealDamge(bool player, float weight_physical, float weight_magical_damage,
     int fire_damage, int water_damage, int wind_damage, int earth_damage, int darkness_damage)
@@ -242,10 +267,15 @@ public class BattleSystem : MonoBehaviour
         UpdateHPMPPanel();
         playerDef = false;
         enemy_turn = false;
-        yield return new WaitForSeconds(3f);
+        playerAttackedAnim[monsterAttactAnimationIndex].SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        playerAttackedAnim[monsterAttactAnimationIndex].SetActive(false);
+        yield return new WaitForSeconds(1.5f);
         if (p_current_hp <= 0)
         {
             descriptionText.text = "You lose!";
+            yield return new WaitForSeconds(1.5f);
+            SceneManager.LoadScene("Village");
         }
         player_turn = true;
     }
@@ -254,10 +284,15 @@ public class BattleSystem : MonoBehaviour
         descriptionText.text = "You deal " + DealDamge(true, 1, 0, 0, 0, 0, 0, 0).ToString() + " damage to emeny";
         UpdateHPMPPanel();
         player_turn = false;
-        yield return new WaitForSeconds(3f);
+        monsterAttackedAnim[3].SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        monsterAttackedAnim[3].SetActive(false);
+        yield return new WaitForSeconds(1.5f);
         if (e_current_hp <= 0)
         {
             descriptionText.text = "Enemy defeated!";
+            yield return new WaitForSeconds(1.5f);
+            SceneManager.LoadScene("Town");
         }
         enemy_turn = true;
     }
@@ -266,7 +301,7 @@ public class BattleSystem : MonoBehaviour
         descriptionText.text = "You are defending!";
         playerDef = true;
         player_turn = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         enemy_turn = true;
     }
     IEnumerator Escape()
@@ -274,7 +309,8 @@ public class BattleSystem : MonoBehaviour
         descriptionText.text = "You run for your life!";
         playerDef = false;
         enemy_turn = false;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene("TOWN");
     }
     void OnAttackButtonClick()
     {

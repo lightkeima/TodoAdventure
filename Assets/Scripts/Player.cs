@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     public int str;
     public int agi;
     public int intel;
-
+    public int selectedSprite;
     public int gold = 0;
     public int hp = 20;
     public int mp = 20;
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     // TodoItem
     public List<TodoItem> doneList;
     public List<TodoItem> todoList;
-
+    public List<int> defeatList;
     public bool stat_change = false;
     void Awake()
     {
@@ -37,10 +37,13 @@ public class Player : MonoBehaviour
         playerName = selectedPlayer.PlayerName;
         this.doneList = new List<TodoItem>();
         this.todoList = new List<TodoItem>();
+        this.defeatList = new List<int>();
         LoadTodoList(true);
         LoadTodoList(false);
         CalculateAttributes();
         CalculateStat();
+        LoadGoldAndSprite();
+        LoadDefeatList();
     }
     public void UpdateStat(int str, int agi, int intel)
     {
@@ -81,6 +84,11 @@ public class Player : MonoBehaviour
         else path += "/Todo/" + playerId + "_todo.txt";
         if (!File.Exists(path))
         {
+            if (!Directory.Exists(Application.dataPath + "/Todo"))
+            {
+                Directory.CreateDirectory(Application.dataPath + "/Todo");
+
+            }
             StreamWriter wr = new StreamWriter(path);
             wr.WriteLine("0");
             wr.Close();
@@ -130,8 +138,42 @@ public class Player : MonoBehaviour
         }
         sr.Close();
     }
-    void SaveTodo(){
-        
+    public void SaveTodo(bool load_done)
+    {
+        List<TodoItem> list;
+        string path = Application.dataPath;
+        if (!Directory.Exists(Application.dataPath + "/Todo"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Todo");
+
+        }
+        if (load_done)
+        {
+            list = doneList;
+            path += "/Todo/" + playerId + "_done.txt";
+        }
+        else
+        {
+            list = todoList;
+            path += "/Todo/" + playerId + "_todo.txt";
+        }
+        StreamWriter wr = new StreamWriter(path);
+        wr.WriteLine(list.Count.ToString());
+        for (int i = 0; i < list.Count; ++i)
+        {
+            wr.WriteLine(list[i].title);
+            wr.WriteLine(list[i].description);
+            wr.WriteLine(list[i].duetime.ToString("yyyyMMddHHmm"));
+            int isDaily = list[i].isDaily ? 1 : 0;
+            wr.WriteLine(isDaily.ToString());
+            wr.WriteLine(list[i].bonus.Count.ToString());
+            foreach (KeyValuePair<string, int> item in list[i].bonus)
+            {
+                wr.WriteLine(item.Key);
+                wr.WriteLine(item.Value.ToString());
+            }
+        }
+        wr.Close();
     }
     public void SummaryTodoList()
     {
@@ -152,8 +194,76 @@ public class Player : MonoBehaviour
         if (todoList[index].bonus.ContainsKey("intelligence"))
             intel += todoList[index].bonus["intelligence"];
         todoList.RemoveAt(index);
+        SaveTodo(true);
+        SaveTodo(false);
         CalculateStat();
     }
+    public void SaveGoldAndSprite()
+    {
+        string path = Application.dataPath + "/Players/" + playerId + ".txt";
+        StreamWriter sw = new StreamWriter(path);
+        sw.WriteLine(selectedSprite);
+        sw.WriteLine(gold);
+        sw.Close();
+    }
+    public void LoadGoldAndSprite()
+    {
+        string path = Application.dataPath + "/Players/" + playerId + ".txt";
+        if (!File.Exists(path))
+        {
+            if (!Directory.Exists(Application.dataPath + "/Players"))
+            {
+                Directory.CreateDirectory(Application.dataPath + "/Players");
 
+            }
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine("0");
+            sw.WriteLine("0");
+            sw.Close();
+        }
+        StreamReader sr = new StreamReader(path);
+        selectedSprite = int.Parse(sr.ReadLine());
+        gold = int.Parse(sr.ReadLine());
+        sr.Close();
+    }
+    public void LoadDefeatList()
+    {
+        string path = Application.dataPath + "/Players/" + playerId + "_defeatList.txt";
+        if (!Directory.Exists(Application.dataPath + "/Players"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Players");
+
+        }
+        if (!File.Exists(path))
+        {
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine("0");
+            sw.Close();
+        }
+        StreamReader sr = new StreamReader(path);
+        int n = int.Parse(sr.ReadLine());
+        for (int i = 0; i < n; ++i)
+        {
+            defeatList.Add(int.Parse(sr.ReadLine()));
+        }
+        sr.Close();
+    }
+
+    public void SaveDefeatList()
+    {
+        string path = Application.dataPath + "/Players/" + playerId + "_defeatList.txt";
+        if (!Directory.Exists(Application.dataPath + "/Players"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Players");
+
+        }
+        StreamWriter wr = new StreamWriter(path);
+        wr.WriteLine(defeatList.Count.ToString());
+        for (int i = 0; i < defeatList.Count; ++i)
+        {
+            wr.WriteLine(defeatList[i]);
+        }
+        wr.Close();
+    }
 }
 

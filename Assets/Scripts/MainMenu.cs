@@ -22,6 +22,7 @@ public class MainMenu : MonoBehaviour
         public int id;
         public string name;
         public string create;
+        public int selectedSprite;
     }
     private int currentId = 0;
     public List<Character> characters = new List<Character>();
@@ -47,7 +48,8 @@ public class MainMenu : MonoBehaviour
         if (!File.Exists(path))
         {
             StreamWriter wr = new StreamWriter(path);
-            wr.WriteLine("0");
+            System.Random a = new System.Random();
+            wr.WriteLine(a.Next(16));
             wr.WriteLine("0");
             wr.Close();
         }
@@ -60,6 +62,7 @@ public class MainMenu : MonoBehaviour
             character.id = int.Parse(sr.ReadLine());
             character.name = sr.ReadLine();
             character.create = sr.ReadLine();
+            character.selectedSprite = LoadSelectedSprite(character.id);
             characters.Add(character);
         }
         sr.Close();
@@ -97,6 +100,7 @@ public class MainMenu : MonoBehaviour
             item.transform.SetParent(content.transform.GetChild(0), false);
             item.transform.GetChild(0).gameObject.GetComponent<Text>().text = characters[i].name;
             item.transform.GetChild(1).gameObject.GetComponent<Text>().text = "Create at:" + characters[i].create;
+            item.transform.GetChild(2).gameObject.transform.GetChild(characters[i].selectedSprite).gameObject.SetActive(true);
             item.name = characters[i].id.ToString();
             // item.transform.localPosition = new Vector3(0, , 0);
         }
@@ -108,5 +112,26 @@ public class MainMenu : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
+    }
+    public int LoadSelectedSprite(int playerId)
+    {
+        int sp;
+        string path = Application.dataPath + "/Players/" + playerId + ".txt";
+        if (!File.Exists(path))
+        {
+            if (!Directory.Exists(Application.dataPath + "/Players"))
+            {
+                Directory.CreateDirectory(Application.dataPath + "/Players");
+
+            }
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine("0");
+            sw.WriteLine("0");
+            sw.Close();
+        }
+        StreamReader sr = new StreamReader(path);
+        sp = int.Parse(sr.ReadLine());
+        sr.Close();
+        return sp;
     }
 }

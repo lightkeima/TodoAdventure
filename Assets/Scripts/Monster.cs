@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    public string mosnterName = "default";
+    public int mid;
+    public int attackAnimIndex;
+    public int bgid;
+    public string monsterName = "default";
     public int hp = 20;
     public int mp = 20;
     public int physical_damage = 4;
@@ -16,16 +19,5 @@ public class Monster : MonoBehaviour
     public float wind_resistance = 0;
     public float darkness_resistance = 0;
     public float magic_resistance = 0;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int monsterSprite;
 }

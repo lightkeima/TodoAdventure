@@ -5,8 +5,9 @@ using UnityEngine.UI;
 public class StatusPanelController : MonoBehaviour
 {
     public GameObject playerObj;
-    Player player;
 
+    public List<GameObject> sprites;
+    Player player;
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,6 +29,7 @@ public class StatusPanelController : MonoBehaviour
                 SetTexts();
                 player.stat_change = false;
             }
+            SetImage(player.selectedSprite);
         }
     }
     public void SetTexts()
@@ -49,5 +51,13 @@ public class StatusPanelController : MonoBehaviour
         panel2.transform.GetChild(5).gameObject.GetComponent<Text>().text = player.physical_damage.ToString();
         panel2.transform.GetChild(7).gameObject.GetComponent<Text>().text = player.magical_damage.ToString();
         panel2.transform.GetChild(9).gameObject.GetComponent<Text>().text = player.armor.ToString();
+    }
+    public void SetImage(int selected)
+    {
+        foreach (GameObject sprite in sprites)
+        {
+            sprite.SetActive(false);
+        }
+        sprites[selected].SetActive(true);
     }
 }
