@@ -8,7 +8,7 @@ public class TodoItem
     public string title = "";
     public string description = "";
     public bool noduetime = true;
-    public DateTime duetime = DateTime.ParseExact("000000000000", "yyyyMMddHHmm", null);
+    public DateTime duetime = DateTime.ParseExact("000101010101", "yyyyMMddHHmm", null);
 
     //Daily Item
     public bool isDaily = false;

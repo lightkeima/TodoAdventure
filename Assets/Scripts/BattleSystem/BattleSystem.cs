@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class BattleSystem : MonoBehaviour
 {
 
+    public GameObject attackSound;
     public List<GameObject> playerAttackedAnim;
     public List<GameObject> monsterAttackedAnim;
 
@@ -268,8 +269,10 @@ public class BattleSystem : MonoBehaviour
         playerDef = false;
         enemy_turn = false;
         playerAttackedAnim[monsterAttactAnimationIndex].SetActive(true);
+        attackSound.SetActive(true);
         yield return new WaitForSeconds(0.3f);
         playerAttackedAnim[monsterAttactAnimationIndex].SetActive(false);
+        attackSound.SetActive(false);
         yield return new WaitForSeconds(1.5f);
         if (p_current_hp <= 0)
         {
@@ -285,8 +288,10 @@ public class BattleSystem : MonoBehaviour
         UpdateHPMPPanel();
         player_turn = false;
         monsterAttackedAnim[3].SetActive(true);
+        attackSound.SetActive(true);
         yield return new WaitForSeconds(0.3f);
         monsterAttackedAnim[3].SetActive(false);
+        attackSound.SetActive(false);
         yield return new WaitForSeconds(1.5f);
         if (e_current_hp <= 0)
         {

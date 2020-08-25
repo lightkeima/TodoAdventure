@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
     public Button addBtn;
     public Button createPlayBtn;
     public SelectedPlayer selectedPlayer;
-
+    private int tempSelected;
     public struct Character
     {
         public int id;
@@ -47,9 +47,13 @@ public class MainMenu : MonoBehaviour
         string path = Application.dataPath + "/Player/player.txt";
         if (!File.Exists(path))
         {
+            if (!Directory.Exists(Application.dataPath + "/Player"))
+            {
+                Directory.CreateDirectory(Application.dataPath + "/Player");
+
+            }
             StreamWriter wr = new StreamWriter(path);
-            System.Random a = new System.Random();
-            wr.WriteLine(a.Next(16));
+            wr.WriteLine("0");
             wr.WriteLine("0");
             wr.Close();
         }
@@ -73,8 +77,23 @@ public class MainMenu : MonoBehaviour
         character.id = ++currentId;
         character.name = characterName.text;
         character.create = DateTime.Now.ToString("HH:mm dd/MM/yyy");
+        System.Random a = new System.Random();
+        tempSelected = a.Next(16);
+        character.selectedSprite = tempSelected;
         characters.Insert(0, character);
         string path = Application.dataPath + "/Player/player.txt";
+        if (!File.Exists(path))
+        {
+            if (!Directory.Exists(Application.dataPath + "/Player"))
+            {
+                Directory.CreateDirectory(Application.dataPath + "/Player");
+
+            }
+            StreamWriter sw = new StreamWriter(path);
+            sw.WriteLine("0");
+            sw.WriteLine("0");
+            sw.Close();
+        }
         StreamWriter wr = new StreamWriter(path);
         wr.WriteLine(currentId);
         wr.WriteLine(characters.Count);
@@ -85,6 +104,17 @@ public class MainMenu : MonoBehaviour
             wr.WriteLine(_character.create);
         }
         wr.Close();
+        path = Application.dataPath + "/Players/" + character.id + ".txt";
+
+        if (!Directory.Exists(Application.dataPath + "/Players"))
+        {
+            Directory.CreateDirectory(Application.dataPath + "/Players");
+
+        }
+        StreamWriter sw1 = new StreamWriter(path);
+        sw1.WriteLine(tempSelected.ToString());
+        sw1.WriteLine("0");
+        sw1.Close();
         selectedPlayer.SelectedPlayerId = character.id.ToString();
         selectedPlayer.PlayerName = character.name;
         RemoveAllChild();
@@ -125,7 +155,7 @@ public class MainMenu : MonoBehaviour
 
             }
             StreamWriter sw = new StreamWriter(path);
-            sw.WriteLine("0");
+            sw.WriteLine(tempSelected.ToString());
             sw.WriteLine("0");
             sw.Close();
         }
